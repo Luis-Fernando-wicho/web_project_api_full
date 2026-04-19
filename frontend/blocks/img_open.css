@@ -1,0 +1,61 @@
+.img_open {
+  border: none;
+  background-color: transparent;
+  max-width: 40vw;
+  padding: 11px;
+  scale: 1;
+  outline: none;
+}
+
+.img_open-active {
+  animation-name: Img-heard;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+}
+
+.img_open::backdrop {
+  backdrop-filter: blur(10px);
+}
+
+.img_open:checked {
+  border: none;
+}
+
+.formImg_open {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.img_open__img {
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 21px;
+}
+
+.img_open__text {
+  margin-top: 10px;
+  color: white;
+  align-self: start;
+  font-size: clamp(17px, 3vw, 35px);
+}
+
+/* @media screen and (min-width: 320px) and (max-width: 768px) {
+  .img_open {
+    max-width: 70vw;
+    padding: 7px;
+  }
+} */
+
+@keyframes Img-heard {
+  0% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.05;
+  }
+  100% {
+    scale: 1;
+  }
+}

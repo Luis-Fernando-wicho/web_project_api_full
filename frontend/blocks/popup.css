@@ -1,0 +1,138 @@
+.backdrop {
+  z-index: 99;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.popup {
+  z-index: 999;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  height: auto;
+}
+
+.popup__close {
+  align-self: flex-end;
+  &:hover {
+    opacity: 0.5;
+    scale: 1.3;
+  }
+}
+.popup__content {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 21px;
+  display: block;
+  background-color: rgba(255, 255, 255, 0);
+  color: black;
+}
+
+.popup__contentwhite {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  border: none;
+  border-radius: 21px;
+  display: block;
+  background-color: rgb(255, 255, 255);
+  color: black;
+}
+
+.popup__form {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.popup__form_title {
+  margin: 0%;
+  padding: 0%;
+  width: 100%;
+  height: 10%;
+  color: black;
+  font-size: clamp(30px, 3vw, 40px);
+}
+
+.popup__form__label {
+  font-size: 18px;
+  margin: 0%;
+  padding: 0%;
+  width: 100%;
+  border-top: 0px;
+  border-right: 5px;
+  border-left: 0px;
+}
+
+.popup__input {
+  font-size: 18px;
+  margin: 0%;
+  padding: 0%;
+  width: 100%;
+  border-top: 0px;
+  border-right: 5px;
+  border-left: 0px;
+  height: 26px;
+  padding-bottom: 10px;
+}
+
+.popup__button {
+  margin: 0%;
+  padding: 0%;
+  width: 100%;
+  height: 70px;
+  background-color: black;
+  color: white;
+  border-radius: 7px;
+  &:hover {
+    opacity: 0.5;
+  }
+  &.popup__button_disabled {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+  }
+  &.popup__button:disabled {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+  }
+  &:hover:disabled {
+    opacity: 1;
+  }
+}
+
+.popup__input_type_error {
+  border-color: red;
+}
+
+.popup__error_visible {
+  color: red;
+}
+/* chica */
+
+@media screen and (min-width: 320px) and (max-width: 768px) {
+  .popup__profile,
+  .popup__places {
+    padding: 32px 36px;
+    width: 70%;
+    height: 50%;
+    border: none;
+    border-radius: 21px;
+  }
+}
