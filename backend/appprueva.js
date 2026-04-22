@@ -1,25 +1,25 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
+/* const cors = require("cors");
 const { errors } = require("celebrate");
 const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
+const rateLimit = require("express-rate-limit"); */
 
 const userRoutes = require("./routes/users");
 const cardRoutes = require("./routes/cards");
 const { login, createUser } = require("./controllers/users");
 const auth = require("./middlewares/auth");
-const { requestLogger, errorLogger } = require("./middlewares/logger");
+/* const { requestLogger, errorLogger } = require("./middlewares/logger");
 const { validateSignin, validateSignup } = require("./middlewares/validation");
 const errorHandler = require("./middlewares/errorHandler");
-const NotFoundError = require("./errors/NotFoundError");
+const NotFoundError = require("./errors/NotFoundError"); */
 
 const { PORT = 3000, DB_URL = "mongodb://localhost:27017/aroundb" } =
   process.env;
 
 const app = express();
 
-// Configuración de seguridad
+/* // Configuración de seguridad
 app.use(helmet());
 
 // Configuración de rate limiting
@@ -32,7 +32,7 @@ app.use(limiter);
 // Configuración de CORS
 app.use(cors());
 app.options("*", cors());
-
+ */
 // Conexión a MongoDB
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,

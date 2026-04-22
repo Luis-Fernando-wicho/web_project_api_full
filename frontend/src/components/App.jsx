@@ -16,6 +16,9 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext.jsx";
 import api from "../utils/api.js";
 
 function App() {
+  const [token, setToken] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -78,6 +81,7 @@ function App() {
       .then((res) => {
         // ✅ Login exitoso
         if (res.token) {
+          setToken(res.token);
           // Guardar token en localStorage
           localStorage.setItem("token", res.token);
 
@@ -113,7 +117,6 @@ function App() {
     setIsInfoTooltipOpen(false);
   };
 
-  const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
 
   useEffect(() => {

@@ -11,24 +11,8 @@ class Api {
     return Promise.reject(`Error: ${res.status}`);
   }
 
-  // Método para peticiones con autenticación
-  _request(url, options = {}) {
-    const token = localStorage.getItem("jwt");
-
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-      ...options,
-    };
-
-    // Añadir token si existe (excepto login/register)
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return fetch(`${this.baseUrl}${url}`, config).then(this._checkResponse);
+  _request(url, options) {
+    return fetch(url, options).then(this._checkResponse);
   }
 
   // Obtener información del usuario
@@ -39,43 +23,43 @@ class Api {
   }
 
   // Obtener tarjetas iniciales
-  getCardList() {
+  getInitialCards() {
     return this._request(`${this._baseUrl}/cards`, {
       headers: this._headers,
     });
   }
 
   // Actualizar información del perfil
-  setUserInfo(newName, newAbout) {
+  setUserInfo(data) {
     return this._request(`${this._baseUrl}/users/me`, {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
-        name: newName,
-        about: newAbout,
+        name: data.name,
+        about: data.about,
       }),
     });
   }
 
   // Actualizar avatar del usuario
-  setUserAvatar(url) {
+  setUserAvatar(data) {
     return this._request(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers, // Asegúrate de que aquí esté 'Content-Type': 'application/json'
+      headers: this._headers,
       body: JSON.stringify({
-        avatar: url, // LA CLAVE DEBE SER "avatar"
+        avatar: data.avatar,
       }),
     });
   }
 
   // Agregar nueva tarjeta
-  addCard({ name, link }) {
+  addCard(data) {
     return this._request(`${this._baseUrl}/cards`, {
       method: "POST",
-      headers: this._headers, // Asegúrate de que incluya Content-Type: application/json
+      headers: this._headers,
       body: JSON.stringify({
-        name: name,
-        link: link,
+        name: data.name,
+        link: data.link,
       }),
     });
   }
@@ -89,18 +73,19 @@ class Api {
   }
 
   // Cambiar estado de like en una tarjeta
-  changeLikeCardStatus(cardId, likestate) {
+  changeLikeCardStatus(cardId, isLiked) {
     return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: !likestate ? "DELETE" : "PUT",
+      method: isLiked ? "PUT" : "DELETE",
       headers: this._headers,
     });
   }
 }
 
+// Crear instancia de la API
 const api = new Api({
-  baseUrl: "https://around-api.es.tripleten-services.com/v1",
+  baseUrl: "https://api.tu-dominio.com/v1", // Reemplaza con tu URL de API
   headers: {
-    authorization: "c3ef818e-6c57-4ba3-a2dc-d495a06f400e",
+    authorization: `Bearer ${localStorage.getItem("token")}`,
     "Content-Type": "application/json",
   },
 });
