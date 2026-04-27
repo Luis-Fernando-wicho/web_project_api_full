@@ -1,10 +1,15 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
+    port: 5173,
+    proxy: {
+      "/users": "http://localhost:3000",
+      "/cards": "http://localhost:3000",
+      "/signin": "http://localhost:3000",
+      "/signup": "http://localhost:3000",
+    },
   },
 });

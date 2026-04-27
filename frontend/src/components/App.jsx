@@ -57,6 +57,18 @@ function App() {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      // <--- SOLO cargar si el usuario está logueado
+      Promise.all([api.getUserInfo(), api.getCardList()])
+        .then(([userData, cardsData]) => {
+          setCurrentUser(userData.data || userData);
+          setCards(cardsData.data || cardsData);
+        })
+        .catch((err) => console.error("Error al cargar datos iniciales:", err));
+    }
+  }, [isLoggedIn]); // <--- Se ejecuta cuando isLoggedIn cambia
+
   const handleRegister = (email, password) => {
     auth
       .register(email, password)
@@ -81,9 +93,9 @@ function App() {
       .then((res) => {
         // ✅ Login exitoso
         if (res.token) {
-          setToken(res.token);
           // Guardar token en localStorage
           localStorage.setItem("token", res.token);
+          setToken(res.token);
 
           // Actualizar estado de la aplicación
           setIsLoggedIn(true);
@@ -119,21 +131,16 @@ function App() {
 
   const [cards, setCards] = useState([]);
 
-  useEffect(() => {
-    api
-      .getUserInfo()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((err) => console.error(`Error al cargar usuario: ${err}`));
-  }, []);
-
   const handleUpdateUser = (data) => {
-    (async () => {
-      await api.setUserInfo(data.name, data.about).then((newData) => {
-        setCurrentUser(newData);
-      });
-    })();
+    api
+      .setUserInfo(data.name, data.about)
+      .then((res) => {
+        // 'res' es { data: { name: "...", about: "..." } }
+        // Actualizamos el estado global con el objeto que viene dentro de 'data'
+        setCurrentUser(res.data);
+        closeAllPopups(); // Cerramos el popup después de actualizar
+      })
+      .catch((err) => console.error("Error al actualizar perfil:", err));
   };
 
   const handleUpdateAvatar = (data) => {
@@ -152,12 +159,9 @@ function App() {
     })();
   };
 
-  useEffect(() => {
-    api
-      .getCardList()
-      .then((data) => setCards(data))
-      .catch((err) => console.error(err));
-  }, []);
+  if (isLoading) {
+    return <div className="loading">Cargando...</div>;
+  }
 
   return (
     <>

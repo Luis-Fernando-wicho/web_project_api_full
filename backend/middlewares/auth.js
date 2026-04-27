@@ -1,27 +1,23 @@
 const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config");
 
 module.exports = (req, res, next) => {
-  // obtener la autorización del encabezado
-  const { authorization } = req.headers;
+  const authorization = req.headers.authorization;
 
-  // comprobar que el encabezado existe y comienza con 'Bearer '
   if (!authorization || !authorization.startsWith("Bearer ")) {
-    return res.status(401).send({ message: "Se requiere autorización" });
+    return res
+      .status(401)
+      .send({ message: "Formato de autorización incorrecto" });
   }
 
-  // obtener el token
   const token = authorization.replace("Bearer ", "");
 
-  let payload;
-
   try {
-    // verificar el token
-    payload = jwt.verify(token, "some-secret-key");
+    payload = jwt.verify(token, JWT_SECRET);
+    req.user = payload;
+    next();
   } catch (err) {
-    // devolver un error si algo va mal
-    return res.status(401).send({ message: "Se requiere autorización" });
+    console.log("Error de verificación JWT:", err.message); // <--- ESTO NOS DIRÁ LA VERDAD
+    return res.status(401).send({ message: "Token inválido o expirado" });
   }
-
-  req.user = payload; // asignar el payload al objeto de solicitud
-  next(); // enviar la solicitud al siguiente middleware
 };

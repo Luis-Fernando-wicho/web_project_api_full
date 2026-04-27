@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const { JWT_SECRET } = require("../config");
 
 // GET /users - devuelve todos los usuarios
 module.exports.getUsers = (req, res, next) => {
@@ -75,8 +76,9 @@ module.exports.login = (req, res, next) => {
             .status(401)
             .send({ message: "Email o contraseña incorrectos" });
         }
+        console.log("Creando token para usuario:", user._id);
 
-        const token = jwt.sign({ _id: user._id }, "some-secret-key", {
+        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
           expiresIn: "7d",
         });
 
@@ -98,7 +100,7 @@ module.exports.updateProfile = async (req, res) => {
       { new: true, runValidators: true },
     ).orFail();
 
-    res.json(user);
+    res.send({ data: user });
   } catch (error) {
     if (error.name === "DocumentNotFoundError") {
       return res.status(404).json({ message: "Usuario no encontrado" });
@@ -124,7 +126,7 @@ module.exports.updateAvatar = async (req, res, next) => {
       { new: true, runValidators: true },
     ).orFail();
 
-    res.json(user);
+    res.send({ data: user });
   } catch (error) {
     if (error.name === "DocumentNotFoundError") {
       return res.status(404).json({ message: "Usuario no encontrado" });

@@ -5,7 +5,7 @@ import "../../../blocks/login.css";
 
 const Login = ({ onLogin, isLoading }) => {
   const [data, setData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -31,18 +31,20 @@ const Login = ({ onLogin, isLoading }) => {
           id="email"
           name="email"
           type="email"
-          value={data.email}
+          value={data.email || ""} // El || "" evita el undefined
           onChange={handleChange}
           placeholder="correo electronico"
+          required
         />
         <input
           className="login__form-input"
           id="password"
           name="password"
           type="password"
-          value={data.password}
+          value={data.password || ""} // El || "" evita el undefined
           onChange={handleChange}
           placeholder="contraseña"
+          required
         />
 
         <button type="submit" className="login__link">

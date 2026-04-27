@@ -1,5 +1,5 @@
 // src/utils/auth.js
-const BASE_URL = "https://se-register-api.en.tripleten-services.com/v1";
+const BASE_URL = "http://localhost:3000";
 
 // Función para registrar usuarios
 export const register = (email, password) => {

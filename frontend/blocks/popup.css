@@ -6,18 +6,23 @@
   top: 0;
   left: 0;
   backdrop-filter: blur(10px);
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
+
+.backdrop.popup_opened {
+  display: flex; /* Se muestra al abrir */
+}
+
 .popup {
   z-index: 999;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: flex;
+  display: none; /* Cambiamos a none por defecto */
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -32,6 +37,11 @@
     scale: 1.3;
   }
 }
+
+.popup.popup_opened {
+  display: flex;
+}
+
 .popup__content {
   width: 100%;
   height: 100%;

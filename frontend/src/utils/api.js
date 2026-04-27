@@ -1,7 +1,6 @@
 class Api {
   constructor(options) {
     this._baseUrl = options.baseUrl;
-    this._headers = options.headers;
   }
 
   _checkResponse(res) {
@@ -13,43 +12,41 @@ class Api {
 
   // Método para peticiones con autenticación
   _request(url, options = {}) {
-    const token = localStorage.getItem("jwt");
-
+    const token = localStorage.getItem("token");
     const config = {
+      ...options,
       headers: {
         "Content-Type": "application/json",
-        ...options.headers,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers, // Permite sobrescribir si fuera necesario
       },
-      ...options,
     };
 
-    // Añadir token si existe (excepto login/register)
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    return fetch(`${this._baseUrl}${url}`, config).then(this._checkResponse);
+  }
 
-    return fetch(`${this.baseUrl}${url}`, config).then(this._checkResponse);
+  // MÉTODO NUEVO: Obtiene los headers dinámicamente cada vez
+  _getHeaders() {
+    return {
+      authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    };
   }
 
   // Obtener información del usuario
   getUserInfo() {
-    return this._request(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
-    });
+    return this._request(`/users/me`); // Ya no pases headers aquí
   }
 
   // Obtener tarjetas iniciales
   getCardList() {
-    return this._request(`${this._baseUrl}/cards`, {
-      headers: this._headers,
-    });
+    return this._request(`/cards`, {});
   }
 
   // Actualizar información del perfil
   setUserInfo(newName, newAbout) {
-    return this._request(`${this._baseUrl}/users/me`, {
+    return this._request(`/users/me`, {
       method: "PATCH",
-      headers: this._headers,
       body: JSON.stringify({
         name: newName,
         about: newAbout,
@@ -59,9 +56,9 @@ class Api {
 
   // Actualizar avatar del usuario
   setUserAvatar(url) {
-    return this._request(`${this._baseUrl}/users/me/avatar`, {
+    return this._request(`/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers, // Asegúrate de que aquí esté 'Content-Type': 'application/json'
+
       body: JSON.stringify({
         avatar: url, // LA CLAVE DEBE SER "avatar"
       }),
@@ -70,9 +67,9 @@ class Api {
 
   // Agregar nueva tarjeta
   addCard({ name, link }) {
-    return this._request(`${this._baseUrl}/cards`, {
+    return this._request(`/cards`, {
       method: "POST",
-      headers: this._headers, // Asegúrate de que incluya Content-Type: application/json
+
       body: JSON.stringify({
         name: name,
         link: link,
@@ -82,25 +79,22 @@ class Api {
 
   // Eliminar tarjeta
   deleteCard(cardId) {
-    return this._request(`${this._baseUrl}/cards/${cardId}`, {
+    return this._request(`/cards/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
     });
   }
 
   // Cambiar estado de like en una tarjeta
   changeLikeCardStatus(cardId, likestate) {
-    return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
+    return this._request(`/cards/${cardId}/likes`, {
       method: !likestate ? "DELETE" : "PUT",
-      headers: this._headers,
     });
   }
 }
 
 const api = new Api({
-  baseUrl: "https://around-api.es.tripleten-services.com/v1",
+  baseUrl: "http://localhost:3000",
   headers: {
-    authorization: "c3ef818e-6c57-4ba3-a2dc-d495a06f400e",
     "Content-Type": "application/json",
   },
 });

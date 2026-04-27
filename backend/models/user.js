@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema({
       message: "Debe ser una URL válida",
     },
   },
-  // ← NUEVOS CAMPOS PARA AUTENTICACIÓN
   email: {
     type: String,
     required: true, // Obligatorio
