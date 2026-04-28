@@ -12,7 +12,7 @@ import InfoTooltip from "./Login/InfoTooltip.jsx";
 
 import api from "../utils/api";
 import * as auth from "../utils/auth";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 
 function App() {
   const [currentUser, setCurrentUser] = useState({}); //=const [userEmail, setUserEmail] = useState("");

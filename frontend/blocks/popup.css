@@ -11,6 +11,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .popup {
   z-index: 999;
   position: fixed;
@@ -24,6 +25,7 @@
   width: 30%;
   height: auto;
 }
+
 .popup__close {
   align-self: flex-end;
   &:hover {

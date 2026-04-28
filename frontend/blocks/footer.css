@@ -3,6 +3,7 @@
   margin: 67px 0px 60px;
   width: 70%;
   display: flex;
+  background-color: black;
 }
 /* chica */
 @media screen and (min-width: 320px) and (max-width: 768px) {
