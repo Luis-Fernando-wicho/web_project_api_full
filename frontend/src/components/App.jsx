@@ -1,127 +1,91 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
-import Header from "./Header/Header.jsx";
-import Main from "./Main/Main.jsx";
-import Footer from "./Footer/Footer.jsx";
+import Header from "./Header/Header";
+import Main from "./Main/Main";
+import Footer from "./Footer/Footer";
 
-import Login from "./Login/Login.jsx";
+import Login from "./Login/Login";
 import Register from "./Login/Register.jsx";
 import ProtectedRoute from "./Login/ProtectedRoute.jsx";
 import InfoTooltip from "./Login/InfoTooltip.jsx";
 
-import * as auth from "../utils/auth.js";
-
-import { CurrentUserContext } from "../contexts/CurrentUserContext.jsx";
-import api from "../utils/api.js";
+import api from "../utils/api";
+import * as auth from "../utils/auth";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function App() {
-  const [token, setToken] = useState("");
-  const [currentUser, setCurrentUser] = useState(null);
-
+  const [currentUser, setCurrentUser] = useState({}); //=const [userEmail, setUserEmail] = useState("");
+  const [cards, setCards] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Estados para el tooltip de información
+  /* const [popup, setPopup] = useState(null); */
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [tooltipStatus, setTooltipStatus] = useState("");
-
   const navigate = useNavigate();
 
   // Verificar si hay token guardado al cargar la app
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (token) {
-      // Si hay token, verificar si es válido
       auth
         .checkToken(token)
         .then((res) => {
-          // Token válido - usuario autenticado
           setIsLoggedIn(true);
-          setUserEmail(res.data.email);
-          navigate("/"); // Ir a la página principal
+          setCurrentUser(res.data);
+          navigate("/");
         })
         .catch((err) => {
-          // Token inválido - limpiar localStorage
-          console.log("Token inválido:", err);
+          console.error(err);
           localStorage.removeItem("token");
-        })
-        .finally(() => {
-          setIsLoading(false); // Terminar carga
         });
-    } else {
-      // No hay token - usuario no autenticado
-      setIsLoading(false);
     }
   }, [navigate]);
 
   useEffect(() => {
     if (isLoggedIn) {
-      // <--- SOLO cargar si el usuario está logueado
-      Promise.all([api.getUserInfo(), api.getCardList()])
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
         .then(([userData, cardsData]) => {
-          setCurrentUser(userData.data || userData);
-          setCards(cardsData.data || cardsData);
+          setCurrentUser(userData);
         })
-        .catch((err) => console.error("Error al cargar datos iniciales:", err));
+        .catch((err) => console.error(err));
     }
-  }, [isLoggedIn]); // <--- Se ejecuta cuando isLoggedIn cambia
-
-  const handleRegister = (email, password) => {
-    auth
-      .register(email, password)
-      .then((res) => {
-        // ✅ Registro exitoso
-        console.log("Usuario registrado:", res.data);
-        setTooltipStatus("success");
-        setIsInfoTooltipOpen(true);
-        navigate("/signin"); // Redirigir al login
-      })
-      .catch((err) => {
-        // ❌ Error en el registro
-        console.log("Error en registro:", err);
-        setTooltipStatus("error");
-        setIsInfoTooltipOpen(true);
-      });
-  };
+  }, [isLoggedIn]);
 
   const handleLogin = (email, password) => {
     auth
       .authorize(email, password)
-      .then((res) => {
-        // ✅ Login exitoso
-        if (res.token) {
-          // Guardar token en localStorage
-          localStorage.setItem("token", res.token);
-          setToken(res.token);
-
-          // Actualizar estado de la aplicación
-          setIsLoggedIn(true);
-          setUserEmail(email);
-
-          // Redirigir a la página principal
-          navigate("/");
-        }
+      .then((data) => {
+        localStorage.setItem("token", data.token);
+        setIsLoggedIn(true);
+        navigate("/");
       })
       .catch((err) => {
-        // ❌ Error en el login
-        console.log("Error en login:", err);
+        console.error(err);
         setTooltipStatus("error");
         setIsInfoTooltipOpen(true);
       });
   };
 
-  const handleSignOut = () => {
-    // Limpiar localStorage
+  const handleRegister = (email, password) => {
+    auth
+      .register(email, password)
+      .then(() => {
+        setTooltipStatus("success");
+        setIsInfoTooltipOpen(true);
+        navigate("/signin");
+      })
+      .catch((err) => {
+        console.error(err);
+        setTooltipStatus("error");
+        setIsInfoTooltipOpen(true);
+      });
+  };
+
+  const handleLogout = () => {
     localStorage.removeItem("token");
-
-    // Actualizar estado
     setIsLoggedIn(false);
-    setUserEmail("");
-
-    // Redirigir al login
+    setCurrentUser({});
+    setCards([]);
     navigate("/signin");
   };
 
@@ -129,18 +93,12 @@ function App() {
     setIsInfoTooltipOpen(false);
   };
 
-  const [cards, setCards] = useState([]);
-
   const handleUpdateUser = (data) => {
-    api
-      .setUserInfo(data.name, data.about)
-      .then((res) => {
-        // 'res' es { data: { name: "...", about: "..." } }
-        // Actualizamos el estado global con el objeto que viene dentro de 'data'
-        setCurrentUser(res.data);
-        closeAllPopups(); // Cerramos el popup después de actualizar
-      })
-      .catch((err) => console.error("Error al actualizar perfil:", err));
+    (async () => {
+      await api.setUserInfo(data.name, data.about).then((newData) => {
+        setCurrentUser(newData);
+      });
+    })();
   };
 
   const handleUpdateAvatar = (data) => {
@@ -159,10 +117,6 @@ function App() {
     })();
   };
 
-  if (isLoading) {
-    return <div className="loading">Cargando...</div>;
-  }
-
   return (
     <>
       <CurrentUserContext.Provider
@@ -175,18 +129,18 @@ function App() {
         }}
       >
         <div className="page">
-          <Header userEmail={userEmail} onSignOut={handleSignOut} />
+          <Header userEmail={currentUser.email} onSignOut={handleLogout} />
           <Routes>
             <Route
               path="/signup"
               element={
-                <Register onRegister={handleRegister} isLoading={isLoading} />
+                <Register onRegister={handleRegister} isLoading={isLoggedIn} />
               }
             />
 
             <Route
               path="/signin"
-              element={<Login onLogin={handleLogin} isLoading={isLoading} />}
+              element={<Login onLogin={handleLogin} isLoading={isLoggedIn} />}
             />
 
             <Route

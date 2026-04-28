@@ -1,6 +1,7 @@
 class Api {
   constructor(options) {
-    this._baseUrl = options.baseUrl;
+    this.baseUrl = options.baseUrl;
+    this.headers = options.headers;
   }
 
   _checkResponse(res) {
@@ -10,91 +11,61 @@ class Api {
     return Promise.reject(`Error: ${res.status}`);
   }
 
-  // Método para peticiones con autenticación
-  _request(url, options = {}) {
-    const token = localStorage.getItem("token");
-    const config = {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...options.headers, // Permite sobrescribir si fuera necesario
-      },
-    };
-
-    return fetch(`${this._baseUrl}${url}`, config).then(this._checkResponse);
+  getInitialCards() {
+    return fetch(`${this.baseUrl}/cards`, {
+      headers: this.headers,
+    }).then(this._checkResponse);
   }
 
-  // MÉTODO NUEVO: Obtiene los headers dinámicamente cada vez
-  _getHeaders() {
-    return {
-      authorization: `Bearer ${localStorage.getItem("token")}`,
-      "Content-Type": "application/json",
-    };
-  }
-
-  // Obtener información del usuario
   getUserInfo() {
-    return this._request(`/users/me`); // Ya no pases headers aquí
+    return fetch(`${this.baseUrl}/users/me`, {
+      headers: this.headers,
+    }).then(this._checkResponse);
   }
 
-  // Obtener tarjetas iniciales
-  getCardList() {
-    return this._request(`/cards`, {});
-  }
-
-  // Actualizar información del perfil
-  setUserInfo(newName, newAbout) {
-    return this._request(`/users/me`, {
+  setUserInfo(data) {
+    return fetch(`${this.baseUrl}/users/me`, {
       method: "PATCH",
-      body: JSON.stringify({
-        name: newName,
-        about: newAbout,
-      }),
-    });
+      headers: this.headers,
+      body: JSON.stringify(data),
+    }).then(this._checkResponse);
   }
 
-  // Actualizar avatar del usuario
-  setUserAvatar(url) {
-    return this._request(`/users/me/avatar`, {
+  setUserAvatar(data) {
+    return fetch(`${this.baseUrl}/users/me/avatar`, {
       method: "PATCH",
-
-      body: JSON.stringify({
-        avatar: url, // LA CLAVE DEBE SER "avatar"
-      }),
-    });
+      headers: this.headers,
+      body: JSON.stringify(data),
+    }).then(this._checkResponse);
   }
 
-  // Agregar nueva tarjeta
-  addCard({ name, link }) {
-    return this._request(`/cards`, {
+  addCard(data) {
+    return fetch(`${this.baseUrl}/cards`, {
       method: "POST",
-
-      body: JSON.stringify({
-        name: name,
-        link: link,
-      }),
-    });
+      headers: this.headers,
+      body: JSON.stringify(data),
+    }).then(this._checkResponse);
   }
 
-  // Eliminar tarjeta
   deleteCard(cardId) {
-    return this._request(`/cards/${cardId}`, {
+    return fetch(`${this.baseUrl}/cards/${cardId}`, {
       method: "DELETE",
-    });
+      headers: this.headers,
+    }).then(this._checkResponse);
   }
 
-  // Cambiar estado de like en una tarjeta
-  changeLikeCardStatus(cardId, likestate) {
-    return this._request(`/cards/${cardId}/likes`, {
-      method: !likestate ? "DELETE" : "PUT",
-    });
+  changeLikeCardStatus(cardId, isLiked) {
+    return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+      method: isLiked ? "PUT" : "DELETE",
+      headers: this.headers,
+    }).then(this._checkResponse);
   }
 }
 
 const api = new Api({
   baseUrl: "http://localhost:3000",
   headers: {
+    authorization: `Bearer ${localStorage.getItem("token")}`,
     "Content-Type": "application/json",
   },
 });

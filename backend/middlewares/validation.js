@@ -1,7 +1,6 @@
-const { Joi, celebrate } = require("celebrate");
+const { celebrate, Joi } = require("celebrate");
 const validator = require("validator");
 
-// Función personalizada para validar URLs
 const validateURL = (value, helpers) => {
   if (validator.isURL(value)) {
     return value;
@@ -9,16 +8,7 @@ const validateURL = (value, helpers) => {
   return helpers.error("string.uri");
 };
 
-// Validación para crear tarjetas
-const validateCreateCard = celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().custom(validateURL),
-  }),
-});
-
-// Validación para crear usuarios
-const validateCreateUser = celebrate({
+module.exports.validateUserBody = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
@@ -28,31 +18,41 @@ const validateCreateUser = celebrate({
   }),
 });
 
-// Validación para login
-const validateLogin = celebrate({
+module.exports.validateAuthentication = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
 });
 
-// Validación para parámetros de ID
-const validateUserId = celebrate({
+module.exports.validateUserId = celebrate({
   params: Joi.object().keys({
     userId: Joi.string().alphanum().length(24),
   }),
 });
 
-const validateCardId = celebrate({
+module.exports.validateCardBody = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    link: Joi.string().required().custom(validateURL),
+  }),
+});
+
+module.exports.validateCardId = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),
   }),
 });
 
-module.exports = {
-  validateCreateCard,
-  validateCreateUser,
-  validateLogin,
-  validateUserId,
-  validateCardId,
-};
+module.exports.validateUpdateProfile = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
+  }),
+});
+
+module.exports.validateUpdateAvatar = celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().required().custom(validateURL),
+  }),
+});

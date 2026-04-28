@@ -1,15 +1,12 @@
 import ImagePopup from "../form/ImagePopup";
-
-export default function Popup({ onClose, title, children, isOpen }) {
+export default function Popup(props) {
+  const { onClose, title, children } = props;
   const isImagePopup = children.type === ImagePopup;
 
   return (
     <>
-      <div
-        className={`backdrop ${isOpen ? "popup_opened" : ""}`}
-        onClick={onClose}
-      ></div>
-      <div className={`popup ${isOpen ? "popup_opened" : ""}`}>
+      <div className="backdrop" onClick={onClose}></div>
+      <div className="popup">
         <div className="popup__close" onClick={onClose}>
           <svg
             xmlns="http://www.w3.org/2000/svg"

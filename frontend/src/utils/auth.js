@@ -1,4 +1,3 @@
-// src/utils/auth.js
 const BASE_URL = "http://localhost:3000";
 
 // Función para registrar usuarios
@@ -13,15 +12,11 @@ export const register = (email, password) => {
     if (response.ok) {
       return response.json();
     }
-    // Esto te dirá el código de error (400, 401, 409, etc.)
-    return response.json().then((err) => {
-      console.log("Detalle del servidor:", err);
-      throw new Error(err.message || "Error en el registro");
-    });
+    return Promise.reject(`Error: ${response.status}`);
   });
 };
 
-// Función para iniciar sesión
+// Función para autorizar usuarios (login)
 export const authorize = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
@@ -33,7 +28,7 @@ export const authorize = (email, password) => {
     if (response.ok) {
       return response.json();
     }
-    throw new Error("Error en el inicio de sesión");
+    return Promise.reject(`Error: ${response.status}`);
   });
 };
 
@@ -49,6 +44,6 @@ export const checkToken = (token) => {
     if (response.ok) {
       return response.json();
     }
-    throw new Error("Token inválido");
+    return Promise.reject(`Error: ${response.status}`);
   });
 };

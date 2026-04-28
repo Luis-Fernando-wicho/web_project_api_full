@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { CurrentUserContext } from "../../../../contexts/CurrentUserContext";
+import CurrentUserContext from "../../../../contexts/CurrentUserContext";
 export default function EditAvatar({ onClose }) {
   const userContext = useContext(CurrentUserContext);
   const { currentUser, handleUpdateAvatar } = userContext;

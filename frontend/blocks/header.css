@@ -12,57 +12,15 @@
   animation-range: 0 200px;
 
   z-index: 9;
-  /* background-color: black; */
-  color: white;
-}
-.header__container {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 40px;
 }
 
 .header__logo {
   height: 100%;
   min-width: 126px;
   max-width: 15%;
-  margin-top: 0px;
+  margin-top: 40px;
 }
 
-.header__nav {
-  color: white;
-  height: 100%;
-}
-.header__link {
-  color: #fff;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.header__user-info {
-  display: flex;
-  gap: 24px; /* Espacio entre el email y el botón */
-  align-items: center;
-}
-
-.header__email {
-  font-weight: 500;
-  color: white;
-}
-
-.header__logout-button {
-  background: none;
-  border: none;
-  color: white; /* Color grisáceo como en la imagen */
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.header__logout-button:hover {
-  opacity: 0.6;
-}
 .header__line {
   width: 100%;
   height: 1px;

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { ImgContext } from "../../../../contexts/imgContext";
 import ImagePopup from "../form/ImagePopup";
-import { CurrentUserContext } from "../../../../contexts/CurrentUserContext";
+import CurrentUserContext from "../../../../contexts/CurrentUserContext";
 
 export default function Card(props) {
   function handleLikeClick() {

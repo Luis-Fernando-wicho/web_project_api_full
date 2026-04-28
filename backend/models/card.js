@@ -1,10 +1,5 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
 
-// Misma expresión regular para validar URLs
-const urlRegex = /^https?:\/\/(www\.)?[a-zA-Z0-9\-._~:/?%#[\]@!$&'()*+,;=]+#?$/;
-
-// Esquema para Card
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -16,10 +11,12 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: function (url) {
-        return urlRegex.test(url);
+      validator: function (v) {
+        return /^https?:\/\/(www\.)?[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=]+#?$/.test(
+          v,
+        );
       },
-      message: "El link debe ser una URL válida",
+      message: "Debe ser una URL válida",
     },
   },
   owner: {
@@ -38,5 +35,4 @@ const cardSchema = new mongoose.Schema({
   },
 });
 
-// Exportar el modelo
 module.exports = mongoose.model("card", cardSchema);

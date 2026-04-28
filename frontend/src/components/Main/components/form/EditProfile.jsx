@@ -1,20 +1,12 @@
-import { useState, useContext, useEffect } from "react";
-import { CurrentUserContext } from "../../../../contexts/CurrentUserContext";
+import { useState, useContext } from "react";
+import CurrentUserContext from "../../../../contexts/CurrentUserContext";
 
 export default function EditProfile({ onClose }) {
-  const { currentUser, handleUpdateUser } = useContext(CurrentUserContext);
+  const userContext = useContext(CurrentUserContext);
+  const { currentUser, handleUpdateUser } = userContext;
 
-  // Inicializa con cadenas vacías para evitar problemas
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-
-  // 2. Este efecto sincroniza los inputs cuando currentUser cambia
-  useEffect(() => {
-    if (currentUser) {
-      setName(currentUser.name);
-      setDescription(currentUser.about);
-    }
-  }, [currentUser]);
+  const [name, setName] = useState(currentUser.name);
+  const [description, setDescription] = useState(currentUser.about);
 
   const handleNameChange = (event) => {
     setName(event.target.value);

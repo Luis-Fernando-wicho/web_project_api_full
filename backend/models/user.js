@@ -4,39 +4,42 @@ const validator = require("validator");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    default: "Jacques Cousteau", // Valor por defecto
     minlength: 2,
     maxlength: 30,
+    default: "Jacques Cousteau",
   },
   about: {
     type: String,
-    default: "Explorador", // Valor por defecto
     minlength: 2,
     maxlength: 30,
+    default: "Explorador",
   },
   avatar: {
     type: String,
     default:
       "https://practicum-content.s3.us-west-1.amazonaws.com/resources/moved_avatar_1604080799.jpg",
     validate: {
-      validator: (v) => validator.isURL(v),
+      validator: function (v) {
+        return validator.isURL(v);
+      },
       message: "Debe ser una URL válida",
     },
   },
   email: {
     type: String,
-    required: true, // Obligatorio
-    unique: true, // Único en la base de datos
+    required: true,
+    unique: true,
     validate: {
-      validator: (v) => validator.isEmail(v), // Validación de email
+      validator: function (v) {
+        return validator.isEmail(v);
+      },
       message: "Debe ser un email válido",
     },
   },
   password: {
     type: String,
-    required: true, // Obligatorio
-    minlength: 8, // Mínimo 8 caracteres
-    select: false, //Evitar que la API devuelva el hash de la contraseña
+    required: true,
+    select: false,
   },
 });
 

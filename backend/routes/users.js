@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const { validateUserId } = require("../middlewares/validation");
 const {
   getUsers,
   getUserById,
@@ -8,19 +7,25 @@ const {
   updateAvatar,
 } = require("../controllers/users");
 
-// GET /users - devuelve todos los usuarios
+const {
+  validateUserId,
+  validateUpdateProfile,
+  validateUpdateAvatar,
+} = require("../middlewares/validation");
+
+// GET /users — devuelve todos los usuarios
 router.get("/", getUsers);
 
-// GET /users/:userId - devuelve un usuario por _id
-router.get("/:userId", validateUserId, getUserById);
-
-// GET /users/me - devuelve información sobre el usuario actual
+// GET /users/me — devuelve información sobre el usuario actual
 router.get("/me", getCurrentUser);
 
-// PATCH /users/me - actualizar el perfil
-router.patch("/me", updateProfile);
+// GET /users/:userId — devuelve un usuario por _id
+router.get("/:userId", validateUserId, getUserById);
 
-// PATCH /users/me/avatar - actualizar el avatar
-router.patch("/me/avatar", updateAvatar);
+// PATCH /users/me — actualizar el perfil
+router.patch("/me", validateUpdateProfile, updateProfile);
+
+// PATCH /users/me/avatar — actualizar el avatar
+router.patch("/me/avatar", validateUpdateAvatar, updateAvatar);
 
 module.exports = router;
