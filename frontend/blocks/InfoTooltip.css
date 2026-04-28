@@ -5,6 +5,7 @@
   position: fixed;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%); /* Esta es la clave */
   width: 70%;
   height: 70%;
   background-color: rgba(0, 0, 0, 0.5);

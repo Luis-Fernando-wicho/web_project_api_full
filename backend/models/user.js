@@ -43,4 +43,24 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+const bcrypt = require("bcryptjs"); // Asegúrate de tener esto importado
+
+userSchema.statics.findUserByCredentials = function (email, password) {
+  // .select('+password') es CRUCIAL porque en el schema pusiste 'select: false'
+  return this.findOne({ email })
+    .select("+password")
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error("Correo o contraseña incorrectos"));
+      }
+
+      return bcrypt.compare(password, user.password).then((matched) => {
+        if (!matched) {
+          return Promise.reject(new Error("Correo o contraseña incorrectos"));
+        }
+        return user; // Si todo es correcto, devuelve el objeto usuario
+      });
+    });
+};
+
 module.exports = mongoose.model("user", userSchema);

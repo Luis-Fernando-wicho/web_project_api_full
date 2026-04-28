@@ -73,7 +73,7 @@ export default function Main({ cards, setCards }) {
             className="profile__avatar"
             onClick={() => handleOpenPopup(editAvatar)}
           >
-            <img className="profile__img" src={currentUser.avatar} alt="" />
+            <img className="profile__img" src={currentUser?.avatar} alt="" />
             <div className="profile__hover">
               <img className="profile__svg" src={lapiz} alt="svg de un lapiz" />
             </div>
@@ -81,7 +81,7 @@ export default function Main({ cards, setCards }) {
 
           <div className="profile__info">
             <h2 className="profile__info profile__info_name">
-              {currentUser.name}
+              {currentUser?.name}
             </h2>
             <button
               id="infoedit"
@@ -89,7 +89,7 @@ export default function Main({ cards, setCards }) {
               onClick={() => handleOpenPopup(editProfile)}
             ></button>
             <h2 className="profile__info profile__info_ocupation">
-              {currentUser.about}
+              {currentUser?.about}
             </h2>
           </div>
           <button

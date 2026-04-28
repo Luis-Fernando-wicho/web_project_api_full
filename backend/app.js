@@ -40,7 +40,7 @@ app.use("/users", require("./routes/users"));
 app.use("/cards", require("./routes/cards"));
 
 // Manejo de rutas no encontradas
-app.use("*", (req, res) => {
+app.use((req, res) => {
   res.status(404).json({ message: "Recurso solicitado no encontrado" });
 });
 

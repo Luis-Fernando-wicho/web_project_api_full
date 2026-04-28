@@ -37,6 +37,7 @@ function App() {
         .catch((err) => {
           console.error(err);
           localStorage.removeItem("token");
+          setIsLoggedIn(false);
         });
     }
   }, [navigate]);
@@ -129,7 +130,10 @@ function App() {
         }}
       >
         <div className="page">
-          <Header userEmail={currentUser.email} onSignOut={handleLogout} />
+          <Header
+            userEmail={currentUser?.email || ""}
+            onSignOut={handleLogout}
+          />
           <Routes>
             <Route
               path="/signup"

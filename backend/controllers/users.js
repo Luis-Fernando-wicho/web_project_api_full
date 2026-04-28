@@ -83,11 +83,14 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === "production" ? JWT_SECRET : "not-so-secret-string",
+        NODE_ENV === "production" ? JWT_SECRET : "some-secret-key",
         { expiresIn: "7d" },
       );
 
       res.send({ token });
     })
-    .catch(next);
+    .catch((err) => {
+      console.error("Error capturado en login:", err); // <-- Esto imprimirá el error real en la terminal
+      next(err); // Pasa el error al middleware de manejo de errores
+    });
 };
