@@ -15,7 +15,7 @@ import * as auth from "../utils/auth";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState({}); //=const [userEmail, setUserEmail] = useState("");
+  const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   /* const [popup, setPopup] = useState(null); */
@@ -31,7 +31,7 @@ function App() {
         .checkToken(token)
         .then((res) => {
           setIsLoggedIn(true);
-          setCurrentUser(res.data);
+          setCurrentUser(res.data || res);
           navigate("/");
         })
         .catch((err) => {
@@ -46,8 +46,10 @@ function App() {
     if (isLoggedIn) {
       Promise.all([api.getUserInfo(), api.getInitialCards()])
         .then(([userData, cardsData]) => {
-          setCurrentUser(userData); // ✅ Ahora sí se ejecutará
-          setCards(cardsData); // ✅ Ahora sí se ejecutará
+          // Verifica si userData tiene .data o es el objeto directo
+          // Basado en tu consola anterior de api.js, es el objeto directo.
+          setCurrentUser(userData);
+          setCards(cardsData);
         })
         .catch((err) => console.error(err));
     }

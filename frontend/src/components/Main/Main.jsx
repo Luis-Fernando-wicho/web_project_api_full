@@ -66,10 +66,9 @@ export default function Main({ cards, setCards }) {
   }
 
   if (!currentUser || Object.keys(currentUser).length === 0) {
+    console.log("Estado actual de currentUser:", currentUser);
     return (
-      <div className="loading">
-        Cargando... (Esperando datos de: {currentUser?.name || "Nadie"})
-      </div>
+      <div className="loading">Cargando... (Estado: {typeof currentUser})</div>
     );
   }
 
