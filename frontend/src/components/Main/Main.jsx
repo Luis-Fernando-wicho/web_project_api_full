@@ -15,7 +15,30 @@ import api from "../../utils/api";
 import CurrentUserContext from "../../../src/contexts/CurrentUserContext";
 
 export default function Main({ cards, setCards }) {
-  const { currentUser } = useContext(CurrentUserContext);
+  const context = useContext(CurrentUserContext);
+  const [popup, setPopup] = useState(null);
+  const { currentUser } = context;
+
+  function handleOpenPopup(popup) {
+    setPopup(popup);
+  }
+
+  function handleClosePopup() {
+    setPopup(null);
+  }
+
+  const newCardPopup = {
+    title: "Nuevo lugar",
+    children: <NewCard onClose={handleClosePopup} />,
+  };
+  const editAvatar = {
+    title: "Editar Avatar",
+    children: <EditAvatar onClose={handleClosePopup} />,
+  };
+  const editProfile = {
+    title: "Editar Perfil",
+    children: <EditProfile onClose={handleClosePopup} />,
+  };
 
   async function handleCardLike(card) {
     const isLiked = card.isLiked;
@@ -42,27 +65,12 @@ export default function Main({ cards, setCards }) {
       .catch((error) => console.error(error));
   }
 
-  const [popup, setPopup] = useState(null);
-
-  const newCardPopup = {
-    title: "Nuevo lugar",
-    children: <NewCard onClose={handleClosePopup} />,
-  };
-  const editAvatar = {
-    title: "Editar Avatar",
-    children: <EditAvatar onClose={handleClosePopup} />,
-  };
-  const editProfile = {
-    title: "Editar Perfil",
-    children: <EditProfile onClose={handleClosePopup} />,
-  };
-
-  function handleOpenPopup(popup) {
-    setPopup(popup);
-  }
-
-  function handleClosePopup() {
-    setPopup(null);
+  if (!currentUser || Object.keys(currentUser).length === 0) {
+    return (
+      <div className="loading">
+        Cargando... (Esperando datos de: {currentUser?.name || "Nadie"})
+      </div>
+    );
   }
 
   return (

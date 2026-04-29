@@ -46,7 +46,8 @@ function App() {
     if (isLoggedIn) {
       Promise.all([api.getUserInfo(), api.getInitialCards()])
         .then(([userData, cardsData]) => {
-          setCurrentUser(userData);
+          setCurrentUser(userData); // ✅ Ahora sí se ejecutará
+          setCards(cardsData); // ✅ Ahora sí se ejecutará
         })
         .catch((err) => console.error(err));
     }
@@ -123,7 +124,7 @@ function App() {
       <CurrentUserContext.Provider
         value={{
           currentUser,
-          isLoggedIn, // <--- ¡Añade esto!
+          isLoggedIn,
           handleUpdateUser,
           handleUpdateAvatar,
           handleAddPlaceSubmit,

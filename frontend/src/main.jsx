@@ -4,7 +4,6 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "../src/components/App";
 import { ImgContextProvider } from "./contexts/imgContext";
-/* import { CurrentUserProvider } from "./contexts/CurrentUserContext"; */
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

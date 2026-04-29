@@ -6,7 +6,10 @@ class Api {
 
   _checkResponse(res) {
     if (res.ok) {
-      return res.json();
+      return res.json().then((data) => {
+        console.log("Data desde la clase API:", data); // ✅ Forma correcta de ver el JSON
+        return data;
+      });
     }
     return Promise.reject(`Error: ${res.status}`);
   }
@@ -19,7 +22,10 @@ class Api {
 
   getUserInfo() {
     return fetch(`${this.baseUrl}/users/me`, {
-      headers: this.headers,
+      headers: {
+        ...this.headers,
+        authorization: `Bearer ${localStorage.getItem("token")}`, // ✅ Token dinámico
+      },
     }).then(this._checkResponse);
   }
 
