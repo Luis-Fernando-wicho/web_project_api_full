@@ -18,7 +18,9 @@ export default function Card(props) {
     isOwn ? "element__trash" : "element__trash_hidden"
   }`;
 
-  const { name, link, isLiked } = props.card;
+  const { name, link, likes } = props.card;
+
+  const isLiked = likes.some((id) => id === currentUser._id);
 
   const cardLikeButtonClassName = `element__white_button ${
     isLiked ? "element__white_button-active" : ""

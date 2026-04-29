@@ -99,7 +99,7 @@ function App() {
 
   const handleUpdateUser = (data) => {
     (async () => {
-      await api.setUserInfo(data.name, data.about).then((newData) => {
+      await api.setUserInfo(data).then((newData) => {
         setCurrentUser(newData);
       });
     })();
@@ -107,7 +107,7 @@ function App() {
 
   const handleUpdateAvatar = (data) => {
     (async () => {
-      await api.setUserAvatar(data.avatar).then((newUserData) => {
+      await api.setUserAvatar(data).then((newUserData) => {
         setCurrentUser(newUserData);
       });
     })();
