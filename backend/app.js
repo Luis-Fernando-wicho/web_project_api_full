@@ -10,17 +10,15 @@ const errorHandler = require("./middlewares/error-handler");
 
 const app = express();
 
-// 1. Definir los dominios permitidos
 const allowedOrigins = [
   "https://aroundwx.chickenkiller.com",
   "http://aroundwx.chickenkiller.com",
   "https://www.aroundwx.chickenkiller.com",
   "http://www.aroundwx.chickenkiller.com",
-  "http://localhost:3000", // Útil para pruebas locales
-  "http://localhost:5173", // Puerto común de Vite
+  "http://localhost:3000",
+  "http://localhost:5173",
 ];
 
-// 2. Configurar CORS con la lista blanca
 app.use(
   cors({
     origin: allowedOrigins,
@@ -37,7 +35,6 @@ const { PORT = 3000 } = process.env;
 mongoose.connect("mongodb://localhost:27017/aroundb");
 
 // Middlewares
-app.use(cors());
 app.use(express.json());
 
 // Logger de solicitudes
