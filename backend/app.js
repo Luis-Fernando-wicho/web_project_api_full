@@ -9,6 +9,28 @@ const { validateSignup, validateSignin } = require("./middlewares/validation");
 const errorHandler = require("./middlewares/error-handler");
 
 const app = express();
+
+// 1. Definir los dominios permitidos
+const allowedOrigins = [
+  "https://aroundwx.chickenkiller.com",
+  "http://aroundwx.chickenkiller.com",
+  "https://www.aroundwx.chickenkiller.com",
+  "http://www.aroundwx.chickenkiller.com",
+  "http://localhost:3000", // Útil para pruebas locales
+  "http://localhost:5173", // Puerto común de Vite
+];
+
+// 2. Configurar CORS con la lista blanca
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
+app.options("*", cors());
+
 const { PORT = 3000 } = process.env;
 
 // Conectar a MongoDB
